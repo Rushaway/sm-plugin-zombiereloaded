@@ -221,7 +221,7 @@ void ConfigLoad()
 		{
 			mapname[i] = CharToLower(mapname[i]);
 		}
-		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapconfig);
+		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
 		Format(path, sizeof(path), "cfg/%s", mapconfig);
 		PrintToServer("mapconfig : %s", mapconfig);
 
