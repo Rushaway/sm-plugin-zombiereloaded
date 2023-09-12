@@ -206,6 +206,11 @@ void ConfigLoad()
 	
 	// Get map name and format into config path.
 	GetCurrentMap(mapconfig, sizeof(mapconfig));
+	// Read map name as lower case to prevent issue related to uppercase characters
+	for (int i = 0; i < strlen(mapconfig); i++)
+	{
+		mapconfig[i] = CharToLower(mapconfig[i]);
+	}
 	Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapconfig);
 	
 	// Prepend cfg to path.
