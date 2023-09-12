@@ -224,7 +224,6 @@ void ConfigLoad()
 		}
 		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
 		Format(path, sizeof(path), "cfg/%s", mapconfig);
-		PrintToServer("Mapconfig: %s", mapconfig);
 
 		// File doesn't exist, then stop.
 		if (!cfgexists)
@@ -272,7 +271,6 @@ void ConfigOnModulesLoaded()
 		}
 		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.post.cfg", mapname);
 		Format(path, sizeof(path), "cfg/%s", mapconfig);
-		PrintToServer("Map Config POST: %s", mapconfig);
 
 		// File doesn't exist, then stop.
 		if (!cfgexists)
