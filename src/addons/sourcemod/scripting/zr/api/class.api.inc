@@ -26,6 +26,15 @@
  */
 
 /**
+ * @section Global forward handles.
+ */
+Handle g_hAPIFwdOnClassApplyModel = INVALID_HANDLE;
+Handle g_hAPIFwdOnClassModelApplied = INVALID_HANDLE;
+/**
+ * @endsection
+ */
+
+/**
  * Initializes all natives and forwards related to infection.
  */
 void APIClassInit()
@@ -42,6 +51,10 @@ void APIClassInit()
     CreateNative("ZR_GetClassByIdentifier", APIGetClassByIdentifier);
     CreateNative("ZR_GetClassDisplayName", APIGetClassDisplayName);
     CreateNative("ZR_GetClassIdentifier", APIGetClassIdentifier);
+
+    // Forwards
+    g_hAPIFwdOnClassApplyModel = CreateGlobalForward("ZR_OnClassApplyModel", ET_Hook, Param_CellByRef, Param_String, Param_CellByRef);
+    g_hAPIFwdOnClassModelApplied = CreateGlobalForward("ZR_OnClassModelApplied", ET_Ignore, Param_CellByRef, Param_String, Param_CellByRef);
 }
 
 /**
@@ -272,4 +285,49 @@ public int APIGetClassIdentifier(Handle plugin, int numParams)
     SetNativeString(2, classIdent, maxlen);
 
     return bytes;
+}
+
+/**
+ * Called right before ZR is about to apply the model to a player.
+ *
+ * @param client            The client index.
+ * @param modelpath         Buffer to store the modelpath in.
+ * @param skinIndex         The skin index.
+ * @return result           Return the result of the Call.
+ */
+Action APIOnClassApplyModel(int client, char[] modelpath, int skinIndex)
+{
+    // Start forward call.
+    Call_StartForward(g_hAPIFwdOnClassApplyModel);
+    
+    // Push the parameters.
+    Call_PushCellRef(client);
+    Call_PushString(modelpath);
+    Call_PushCellRef(skinIndex);
+    
+    // Get what they returned.
+    Action result;
+    Call_Finish(result);
+    return result;
+}
+
+/**
+ * Called right after ZR has applied the model to a player.
+ *
+ * @param client            The client index.
+ * @param modelpath         Buffer to store the modelpath in.
+ * @param skinIndex         The skin index.
+ * @noreturn
+ */
+void APIOnClassModelApplied(int client, char[] modelpath, int skinIndex)
+{
+    // Start forward call.
+    Call_StartForward(g_hAPIFwdOnClassModelApplied);
+    
+    // Push the parameters.
+    Call_PushCellRef(client);
+    Call_PushString(modelpath);
+    Call_PushCellRef(skinIndex);
+    
+    Call_Finish();
 }
