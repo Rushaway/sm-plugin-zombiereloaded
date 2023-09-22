@@ -293,7 +293,7 @@ public int APIGetClassIdentifier(Handle plugin, int numParams)
  * Called after ZR has applied all classes attributes.
  *
  * @param client            The client index.
- * @param skinIndex         The skin index.
+ * @param classindex        The class index.
  * @noreturn
  */
 void APIOnClassAttributesApplied(int client, int classindex)
