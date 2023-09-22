@@ -65,6 +65,9 @@ bool ClassApplyAttributes(int client, bool improved = false)
     ClassApplyHealthRegen(client, classindex, improved);
     ClassApplySpeed(client, classindex);
 
+    // Trigger API forward.
+    APIOnClassAttributesApplied(client, classindex);
+
     return true;
 }
 
