@@ -28,6 +28,7 @@
 /**
  * @section Global forward handles.
  */
+Handle g_hAPIFwdOnClassAttributesApplied = INVALID_HANDLE;
 Handle g_hAPIFwdOnClassApplyModel = INVALID_HANDLE;
 Handle g_hAPIFwdOnClassModelApplied = INVALID_HANDLE;
 /**
@@ -53,6 +54,7 @@ void APIClassInit()
     CreateNative("ZR_GetClassIdentifier", APIGetClassIdentifier);
 
     // Forwards
+    g_hAPIFwdOnClassAttributesApplied = CreateGlobalForward("ZR_OnClassAttributesApplied", ET_Ignore, Param_CellByRef, Param_CellByRef);
     g_hAPIFwdOnClassApplyModel = CreateGlobalForward("ZR_OnClassApplyModel", ET_Hook, Param_CellByRef, Param_String, Param_CellByRef);
     g_hAPIFwdOnClassModelApplied = CreateGlobalForward("ZR_OnClassModelApplied", ET_Ignore, Param_CellByRef, Param_String, Param_CellByRef);
 }
@@ -285,6 +287,25 @@ public int APIGetClassIdentifier(Handle plugin, int numParams)
     SetNativeString(2, classIdent, maxlen);
 
     return bytes;
+}
+
+/**
+ * Called after ZR has applied all classes attributes.
+ *
+ * @param client            The client index.
+ * @param skinIndex         The skin index.
+ * @noreturn
+ */
+void APIOnClassAttributesApplied(int client, int classindex)
+{
+    // Start forward call.
+    Call_StartForward(g_hAPIFwdOnClassAttributesApplied);
+    
+    // Push the parameters.
+    Call_PushCellRef(client);
+    Call_PushCellRef(classindex);
+    
+    Call_Finish();
 }
 
 /**
