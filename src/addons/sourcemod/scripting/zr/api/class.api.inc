@@ -290,6 +290,7 @@ public int APIGetClassIdentifier(Handle plugin, int numParams)
 }
 
 /**
+
  * Called after ZR has applied all classes attributes.
  *
  * @param client            The client index.
@@ -309,6 +310,7 @@ void APIOnClassAttributesApplied(int client, int classindex)
 }
 
 /**
+
  * Called right before ZR is about to apply the model to a player.
  *
  * @param client            The client index.
