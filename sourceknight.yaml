@@ -23,7 +23,7 @@ project:
         dest: /addons
     - name: TeamManager
       type: git
-      repo: https://github.com/srcdslab/sm-plugin-TeamManager
+      repo: https://github.com/Rushaway/sm-plugin-TeamManager
       unpack:
       - source: /addons
         dest: /addons
