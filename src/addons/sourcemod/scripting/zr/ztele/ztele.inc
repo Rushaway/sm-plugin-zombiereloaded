@@ -370,8 +370,8 @@ public Action ZTele_ForceCommand(int client, int argc)
         // Give client the item.
         bool success = ZTeleClient(targets[x], true);
 
-        // Tell admin the outcome of the command if only 1 client was targetted.
-        if (result == 1)
+        // Tell admin the outcome of the command.
+        if (result > 0)
         {
             if (success)
             {
@@ -384,8 +384,16 @@ public Action ZTele_ForceCommand(int client, int argc)
         }
 
         // Log action to game events.
-        LogEvent(false, LogType_Normal, LOG_GAME_EVENTS, LogModule_ZTele, "Force ZTele", "\"%L\" teleported \"%L\" to spawn.", client, targets[x]);
-        LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%L\" to spawn.", client, targets[x]);
+        if (result > 1)
+        {
+            LogEvent(false, LogType_Normal, LOG_GAME_EVENTS, LogModule_ZTele, "Force ZTele", "\"%L\" teleported \"%s\" to spawn.", client, targetname);
+            LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%s\" to spawn.", client, targetname);
+        }
+        else
+        {
+            LogEvent(false, LogType_Normal, LOG_GAME_EVENTS, LogModule_ZTele, "Force ZTele", "\"%L\" teleported \"%L\" to spawn.", client, targets[x]);
+            LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%L\" to spawn.", client, targets[x]);
+        }
     }
 
     return Plugin_Handled;
