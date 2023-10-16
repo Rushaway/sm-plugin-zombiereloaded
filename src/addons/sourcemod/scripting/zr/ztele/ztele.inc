@@ -364,6 +364,9 @@ public Action ZTele_ForceCommand(int client, int argc)
         return Plugin_Handled;
     }
 
+    // Initialize a flag to track if the action is logged.
+    bool actionLogged = false;
+
     // x = Client index.
     for (int x = 0; x < result; x++)
     {
@@ -376,16 +379,16 @@ public Action ZTele_ForceCommand(int client, int argc)
             // Log to game events.
             LogEvent(false, LogType_Normal, LOG_GAME_EVENTS, LogModule_ZTele, "Force ZTele", "\"%L\" teleported \"%L\" to spawn.", client, targets[x]);
 
-            TranslationReplyToCommand(client, "ZTele command force successful", targetname);
-            // Log the action.
-            if (result > 1)
+            // Log the action only if it hasn't been logged before.
+            if (!actionLogged)
             {
-                LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%s\" to spawn.", client, targetname);
-                continue;
-            }
-            else
-            {
-                LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%L\" to spawn.", client, target);
+                if (result > 1)
+                    LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%s\" to spawn.", client, targetname);
+                else
+                    LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%L\" to spawn.", client, target);
+
+                TranslationReplyToCommand(client, "ZTele command force successful", targetname);
+                actionLogged = true;
             }
         }
         else
