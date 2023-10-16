@@ -385,7 +385,7 @@ public Action ZTele_ForceCommand(int client, int argc)
                 if (result > 1)
                     LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%s\" to spawn.", client, targetname);
                 else
-                    LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%L\" to spawn.", client, target);
+                    LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%L\" to spawn.", client, targets[x]);
 
                 TranslationReplyToCommand(client, "ZTele command force successful", targetname);
                 actionLogged = true;
