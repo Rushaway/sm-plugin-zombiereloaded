@@ -556,7 +556,7 @@ public Action ZSpawnForceCommand(int client, int argc)
     for (int x = 0; x < result; x++)
     {
         // Verify if client is in a valid team
-        if (!ZRIsClientOnTeam(targets[x], CS_TEAM_T) || !ZRIsClientOnTeam(targets[x], CS_TEAM_CT))
+        if (!ZRIsClientOnTeam(targets[x], CS_TEAM_T) && !ZRIsClientOnTeam(targets[x], CS_TEAM_CT))
             continue;
 
         // Spawn client
