@@ -369,31 +369,23 @@ public Action ZTele_ForceCommand(int client, int argc)
     {
         // Give client the item.
         bool success = ZTeleClient(targets[x], true);
+        // Log to game events.
+        LogEvent(false, LogType_Normal, LOG_GAME_EVENTS, LogModule_ZTele, "Force ZTele", "\"%L\" teleported \"%L\" to spawn.", client, targets[x]);
+    }
 
-        // Tell admin the outcome of the command.
-        if (result > 0)
-        {
-            if (success)
-            {
-                TranslationReplyToCommand(client, "ZTele command force successful", targetname);
-            }
-            else
-            {
-                TranslationReplyToCommand(client, "ZTele command force unsuccessful", targetname);
-            }
-        }
-
-        // Log action to game events.
+    // Tell admin the outcome of the command.
+    if (success)
+    {
         if (result > 1)
-        {
-            LogEvent(false, LogType_Normal, LOG_GAME_EVENTS, LogModule_ZTele, "Force ZTele", "\"%L\" teleported \"%s\" to spawn.", client, targetname);
             LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%s\" to spawn.", client, targetname);
-        }
         else
-        {
-            LogEvent(false, LogType_Normal, LOG_GAME_EVENTS, LogModule_ZTele, "Force ZTele", "\"%L\" teleported \"%L\" to spawn.", client, targets[x]);
-            LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%L\" to spawn.", client, targets[x]);
-        }
+            LogAction(client, -1, "[ZR] \"%L\" Forced ZTele on \"%L\" to spawn.", client, target);
+
+        TranslationReplyToCommand(client, "ZTele command force successful", targetname);
+    }
+    else
+    {
+        TranslationReplyToCommand(client, "ZTele command force unsuccessful", targetname);
     }
 
     return Plugin_Handled;
