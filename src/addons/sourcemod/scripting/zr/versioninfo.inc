@@ -32,7 +32,7 @@ void VersionOnCommandsCreate()
 public Action Command_Version(int client, int argc)
 {
     char buffer[1024];
-    char linebuffer[128];
+    char linebuffer[256];
     buffer[0] = 0;
     linebuffer[0] = 0;
 
