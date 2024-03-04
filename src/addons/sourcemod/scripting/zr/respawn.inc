@@ -197,7 +197,7 @@ bool RespawnSpawnClient(int client, bool zombie = false, bool zombieIfSuicide = 
             InfectHumanToZombie(client);
         }
         // Infect if player committed suicide by world damage.
-        else if (zombieIfSuicide && bKilledByWorld[client])
+        else if (zombie && zombieIfSuicide && bKilledByWorld[client])
         {
             InfectHumanToZombie(client);
             bKilledByWorld[client] = false;
