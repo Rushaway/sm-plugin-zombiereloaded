@@ -301,15 +301,14 @@ public int APISendMenuClass(Handle plugin, int numParams)
     int client = GetNativeCell(1);
     int teamid = GetNativeCell(2);
 
+    // Send the class menu based on the teamid.
     // If not provided or invalid teamid, send class main menu
     if (teamid < ZR_CLASS_TEAM_ZOMBIES || teamid > ZR_CLASS_TEAM_ADMINS)
-    {
         ClassMenuMain(client);
-        return -1;
-    }
+    else
+        ClassMenuSelect(client, teamid);
 
-    // Send the class menu based on the teamid.
-    return ClassMenuSelect(client, teamid);
+    return 0;
 }
 
 /**
