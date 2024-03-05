@@ -146,11 +146,7 @@ public void OverlaysQueryClientDXLevel(QueryCookie cookie, int client, ConVarQue
 void OverlaysOnRoundStart()
 {
     // If timer is running, kill it.
-    if (tOverlays != INVALID_HANDLE)
-    {
-        KillTimer(tOverlays);
-        tOverlays = INVALID_HANDLE;
-    }
+    ZREndTimer(tOverlays);
 
     // If antistick is disabled, then stop.
     float overlaysupdate = GetConVarFloat(g_hCvarsList.CVAR_OVERLAYS_UPDATE_TIME);
