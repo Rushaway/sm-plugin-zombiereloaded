@@ -883,6 +883,7 @@ stock void WeaponsRefreshClientWeapon(int client, WeaponsSlot slot)
  */
 stock void WeaponsRemoveAllClientWeapons(int client, bool weaponsdrop)
 {
+    bool removeknife = GetConVarBool(g_hCvarsList.CVAR_WEAPONS_INFECT_REMOVE_KNIFE);
     // Get a list of all client's weapon indexes.
     int weapons[Slot_MAXSIZE];
     WeaponsGetClientWeapons(client, weapons);
@@ -900,11 +901,13 @@ stock void WeaponsRemoveAllClientWeapons(int client, bool weaponsdrop)
         // If this is the knife slot, then strip it and stop.
         if (view_as<WeaponsSlot>(x) == Slot_Melee)
         {
-            PrintToChatAll("Debug: Knife was suppose to be Remove + Killed = Skip!");
             // Strip knife.
-            // RemovePlayerItem(client, weapons[x]);
-            // AcceptEntityInput(weapons[x], "Kill");
-            // continue;
+            if (removeknife)
+            {
+                RemovePlayerItem(client, weapons[x]);
+                AcceptEntityInput(weapons[x], "Kill");
+            }
+            continue;
         }
 
         if (weaponsdrop)
