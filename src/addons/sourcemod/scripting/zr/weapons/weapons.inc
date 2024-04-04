@@ -900,10 +900,11 @@ stock void WeaponsRemoveAllClientWeapons(int client, bool weaponsdrop)
         // If this is the knife slot, then strip it and stop.
         if (view_as<WeaponsSlot>(x) == Slot_Melee)
         {
+            PrintToChatAll("Debug: Knife was suppose to be Remove + Killed = Skip!");
             // Strip knife.
-            RemovePlayerItem(client, weapons[x]);
-            AcceptEntityInput(weapons[x], "Kill");
-            continue;
+            // RemovePlayerItem(client, weapons[x]);
+            // AcceptEntityInput(weapons[x], "Kill");
+            // continue;
         }
 
         if (weaponsdrop)
