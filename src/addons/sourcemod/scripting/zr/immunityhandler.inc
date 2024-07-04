@@ -458,6 +458,7 @@ public Action ImmunityDelayTimerHandler(Handle timer, any client)
 
         // Infect client. Give credit to the stored attacker.
         InfectHumanToZombie(client, attacker);
+        LogMessage("Debug (ImmunityDelayTimerHandler): Infecting client %L", client);
 
         return Plugin_Stop;
     }

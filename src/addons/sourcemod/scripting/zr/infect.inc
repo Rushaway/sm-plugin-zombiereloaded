@@ -340,6 +340,7 @@ void InfectOnClientDisconnect(int client)
 
     // Infect player.
     InfectHumanToZombie(randclient);
+    LogMessage("Debug (InfectOnClientDisconnect): Infecting client %L", client);
 
     // Force ztele the client chosen to replace disonnecting zombie
     bool fztelenew = ZTele_ChosenClientReplaceDisconnected();
@@ -475,6 +476,7 @@ void InfectOnClientHurt(int client, int attacker, const char[] weapon)
 
     // Infect client.
     InfectHumanToZombie(client, attacker);
+    LogMessage("Debug (InfectOnClientHurt): Infecting client %L", client);
 }
 
 /**
@@ -709,7 +711,10 @@ public Action InfectMotherZombie(Handle timer)
 
             // Infect player.
             if (InfectHumanToZombie(client, _, true))
+            {
+                LogMessage("Debug (InfectMotherZombie): Infecting client %L", client);
                 infected++;
+            }
 
             // Remove player from eligible client list.
             RemoveFromArray(aCandidatesMain, i);
@@ -740,7 +745,10 @@ public Action InfectMotherZombie(Handle timer)
 
                 // Infect player.
                 if (InfectHumanToZombie(client, _, true))
+                {
+                    LogMessage("Debug (InfectMotherZombie): Infecting client %L", client);
                     infected++;
+                }
 
                 // Remove player from eligible client list.
                 RemoveFromArray(aCandidatesAlt, i);
@@ -977,6 +985,7 @@ bool InfectHumanToZombie(int client, int attacker = -1, bool motherinfect = fals
 
     // Print message to client.
     TranslationPrintToChat(client, "Infect infected");
+    LogMessage("Debug + MESSAGE (InfectHumanToZombie): Infecting client %L", client);
 
     // Forward event to modules.
     ClassOnClientInfected(client, motherinfect);
@@ -1404,6 +1413,7 @@ stock void InfectManualInfect(int client, int[] targets, int count, bool respawn
         {
             // Turn client into a mother zombie.
             InfectHumanToZombie(targets[x], _, true, respawnoverride, respawn);
+            LogMessage("Debug (InfectManualInfect - 1): Infecting client %L as mother zombie", targets[x]);
 
             // Log action to game events.
             LogEvent(false, LogType_Normal, LOG_GAME_EVENTS, LogModule_Infect, "Manual Infect", "\"%L\" turned \"%L\" into a mother zombie", client, targets[x]);
@@ -1415,6 +1425,7 @@ stock void InfectManualInfect(int client, int[] targets, int count, bool respawn
 
         // Turn client into a zombie.
         InfectHumanToZombie(targets[x], _, false, respawnoverride, respawn);
+        LogMessage("Debug (InfectManualInfect - 2): Infecting client %L as zombie", targets[x]);
 
         // Log action to game events.
         LogEvent(false, LogType_Normal, LOG_GAME_EVENTS, LogModule_Infect, "Manual Infect", "\"%L\" turned \"%L\" into a zombie", client, targets[x]);
