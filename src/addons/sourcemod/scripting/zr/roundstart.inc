@@ -43,7 +43,7 @@ bool g_bPreventDuplicateMessage[MAXPLAYERS + 1];
 void RoundStartOnClientSpawn(int client)
 {
     // If client hasn't spawned yet, then stop.
-    if (!IsPlayerAlive(client) || !g_bPreventDuplicateMessage[client])
+    if (!IsPlayerAlive(client) || g_bPreventDuplicateMessage[client])
     {
         return;
     }
