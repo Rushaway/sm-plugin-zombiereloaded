@@ -100,11 +100,6 @@ bool g_bInfectImmune[MAXPLAYERS + 1];
 bool g_bInfectMotherLast[MAXPLAYERS + 1];
 
 /**
- * Array for flagging client to prevent duplicate messages.
- */
-bool g_bPreventDuplicateMessage[MAXPLAYERS + 1];
-
-/**
  * SteamID cache for storing client mother zombie protection status.
  */
 Handle g_hInfectMotherCycle = INVALID_HANDLE;

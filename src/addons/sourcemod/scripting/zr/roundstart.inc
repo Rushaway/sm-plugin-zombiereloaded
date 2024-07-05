@@ -31,6 +31,11 @@
 #define ROUNDSTART_OBJECTIVE_ENTITIES "func_bomb_target|func_hostage_rescue|c4|hostage_entity"
 
 /**
+ * Array for flagging client to prevent duplicate messages.
+ */
+bool g_bPreventDuplicateMessage[MAXPLAYERS + 1];
+
+/**
  * Client is spawning into the game.
  *
  * @param client    The client index.
