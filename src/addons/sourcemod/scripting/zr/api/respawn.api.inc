@@ -69,6 +69,8 @@ public int APIRespawnClient(Handle plugin, int numParams)
 	bool zombie;
 	bool zombieIfSuicide;
 	RespawnRestoreCondition(condition, zombie, zombieIfSuicide);
+
+	LogMessage("Debug (APIRespawnClient): Spawning client %L as zombie: %d - zm if suicide: %d", client, zombie, zombieIfSuicide);
 	
 	// Respawn the client.
 	RespawnSpawnClient(client, zombie, zombieIfSuicide);

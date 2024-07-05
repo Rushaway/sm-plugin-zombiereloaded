@@ -394,6 +394,7 @@ bool ZSpawnClient(int client, bool force = false, bool zombie = false, bool erro
         teamzombie = zombie;
     }
 
+    LogMessage("Debug (ZSpawnClient): Spawning client %L as %s", client, teamzombie ? "zombie" : "human");
     // Tell respawn module to respawn client.
     return RespawnSpawnClient(client, teamzombie, false);
 }
