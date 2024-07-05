@@ -297,7 +297,6 @@ public void OnConfigsExecuted()
 
                 if(IsPlayerAlive(client) && GetClientTeam(client) == CS_TEAM_T)
                 {
-                    LogMessage("Debug (OnConfigExecuted): Infecting client %L", client);
                     InfectHumanToZombie(client);
                     bZombieSpawned = true;
                 }

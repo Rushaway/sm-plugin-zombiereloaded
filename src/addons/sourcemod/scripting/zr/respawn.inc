@@ -195,14 +195,12 @@ bool RespawnSpawnClient(int client, bool zombie = false, bool zombieIfSuicide = 
         if (zombie)
         {
             InfectHumanToZombie(client);
-            LogMessage("Debug (RespawnSpawnClient - 1): Infecting client %L", client);
             PrintToChatAll("Blabla #1");
         }
         // Infect if player committed suicide by world damage.
         else if (zombieIfSuicide && bKilledByWorld[client])
         {
             InfectHumanToZombie(client);
-            LogMessage("Debug (RespawnSpawnClient - 2): Infecting client %L as zombie", client);
             PrintToChatAll("Blabla #1.a");
             bKilledByWorld[client] = false;
         }

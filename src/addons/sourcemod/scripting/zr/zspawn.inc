@@ -197,9 +197,7 @@ void ZSpawnOnClientSpawn(int client)
             case ZSpawn_Zombie:
             {
                 // Infect client.
-                InfectHumanToZombie(client);
-                // Problem here
-                LogMessage("Debug (ZSpawnOnClientSpawn): Infecting client %L", client);
+                InfectHumanToZombie(client, -1, false, false, false, false);
                 PrintToChatAll("Blabla #2");
             }
         }
@@ -396,7 +394,6 @@ bool ZSpawnClient(int client, bool force = false, bool zombie = false, bool erro
         teamzombie = zombie;
     }
 
-    LogMessage("Debug (ZSpawnClient): Spawning client %L as %s", client, teamzombie ? "zombie" : "human");
     // Tell respawn module to respawn client.
     return RespawnSpawnClient(client, teamzombie, false);
 }

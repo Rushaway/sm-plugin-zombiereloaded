@@ -123,7 +123,6 @@ public int APIInfectClient(Handle plugin, int numParams)
     APIValidateClientIndex(client, Condition_True);
 
     InfectHumanToZombie(client, attacker, motherInfect, respawnOverride, respawn);
-    LogMessage("Debug (APIInfectClient): Infecting client %L", client);
     return -1;
 }
 
