@@ -175,6 +175,7 @@ public Action EventPlayerSpawn(Handle event, const char[] name, bool dontBroadca
     // Get all required event info.
     int index = GetClientOfUserId(GetEventInt(event, "userid"));
 
+    LogMessage("Debug (EventPlayerSpawn): About to call InfectOnClientSpawn() - Client %L is spawning", index);
     // Forward event to modules.
     InfectOnClientSpawn(index);     // Some modules depend on this to finish first.
     AccountOnClientSpawn(index);    // Some modules depend on this to finish first.

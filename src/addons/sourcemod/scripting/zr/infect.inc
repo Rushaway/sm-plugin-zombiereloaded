@@ -392,6 +392,7 @@ void InfectOnClientSpawn(int client)
     // Unglitch kevlar, set last hitgroup to HITGROUP_GENERIC
     ToolsSetClientLastHitGroup(client, HITGROUP_GENERIC);
 
+    LogMessage("Debug (InfectOnClientSpawn): About to call ZSpawnOnClientSpawn for %L", client);
     // Forward event to modules.
     ZSpawnOnClientSpawn(client);
 }
