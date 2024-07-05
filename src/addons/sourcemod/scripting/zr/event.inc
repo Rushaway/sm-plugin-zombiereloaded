@@ -174,7 +174,7 @@ public Action EventPlayerSpawn(Handle event, const char[] name, bool dontBroadca
 {
     // Get all required event info.
     int index = GetClientOfUserId(GetEventInt(event, "userid"));
-    if (!g_bPreventDuplicateMessage[client])
+    if (!g_bPreventDuplicateMessage[index])
         g_bPreventDuplicateMessage[index] = true;
 
     // Forward event to modules.
