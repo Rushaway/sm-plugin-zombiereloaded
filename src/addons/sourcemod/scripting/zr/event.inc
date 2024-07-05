@@ -174,7 +174,8 @@ public Action EventPlayerSpawn(Handle event, const char[] name, bool dontBroadca
 {
     // Get all required event info.
     int index = GetClientOfUserId(GetEventInt(event, "userid"));
-    g_bPreventDuplicateMessage[index] = true;
+    if (!g_bPreventDuplicateMessage[client])
+        g_bPreventDuplicateMessage[index] = true;
 
     // Forward event to modules.
     InfectOnClientSpawn(index);     // Some modules depend on this to finish first.
@@ -193,7 +194,7 @@ public Action EventPlayerSpawn(Handle event, const char[] name, bool dontBroadca
     CreateTimer(0.1, EventPlayerSpawnPost, index);
 
     // Prevent the spawn event to be fired multiples times in a row. (SM issue)
-    CreateTimer(0.3, EventPlayerSpawnResetPost, index);
+    CreateTimer(0.1, EventPlayerSpawnResetPost, index);
     return Plugin_Continue;
 }
 
