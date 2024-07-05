@@ -193,15 +193,11 @@ bool RespawnSpawnClient(int client, bool zombie = false, bool zombieIfSuicide = 
     {
         // Infect if player should spawn as zombie.
         if (zombie)
-        {
             InfectHumanToZombie(client);
-            PrintToChatAll("Blabla #1");
-        }
         // Infect if player committed suicide by world damage.
         else if (zombieIfSuicide && bKilledByWorld[client])
         {
             InfectHumanToZombie(client);
-            PrintToChatAll("Blabla #1.a");
             bKilledByWorld[client] = false;
         }
     }

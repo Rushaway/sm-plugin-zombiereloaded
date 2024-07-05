@@ -174,6 +174,7 @@ public Action EventPlayerSpawn(Handle event, const char[] name, bool dontBroadca
 {
     // Get all required event info.
     int index = GetClientOfUserId(GetEventInt(event, "userid"));
+    g_bPreventDuplicateMessage[index] = true;
 
     // Forward event to modules.
     InfectOnClientSpawn(index);     // Some modules depend on this to finish first.
@@ -190,6 +191,9 @@ public Action EventPlayerSpawn(Handle event, const char[] name, bool dontBroadca
 
     // Fire post player_spawn event.
     CreateTimer(0.1, EventPlayerSpawnPost, index);
+
+    // Prevent the spawn event to be fired multiples times in a row. (SM issue)
+    CreateTimer(0.3, EventPlayerSpawnResetPost, index);
     return Plugin_Continue;
 }
 
@@ -214,6 +218,24 @@ public Action EventPlayerSpawnPost(Handle timer, any client)
     SEffectsOnClientSpawnPost(client);
     ClassOnClientSpawnPost(client);
     SpawnProtectOnClientSpawnPost(client);  // Must be executed after class attributes are applied.
+    return Plugin_Continue;
+}
+
+/**
+ * Event callback (player_spawn)
+ * Client is spawning into the game. *ResetPost
+ *
+ * @noreturn
+ */
+public Action EventPlayerSpawnResetPost(Handle timer, any client)
+{
+    // If client isn't in-game, then stop.
+    if (client <= 0 || client > MaxClients || !IsClientConnected(client) || !IsClientInGame(client))
+    {
+        return Plugin_Continue;
+    }
+
+    g_bPreventDuplicateMessage[client] = false;
     return Plugin_Continue;
 }
 

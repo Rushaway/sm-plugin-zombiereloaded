@@ -197,8 +197,7 @@ void ZSpawnOnClientSpawn(int client)
             case ZSpawn_Zombie:
             {
                 // Infect client.
-                InfectHumanToZombie(client, -1, false, false, false, false);
-                PrintToChatAll("Blabla #2");
+                InfectHumanToZombie(client);
             }
         }
     }

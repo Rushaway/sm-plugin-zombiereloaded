@@ -100,6 +100,11 @@ bool g_bInfectImmune[MAXPLAYERS + 1];
 bool g_bInfectMotherLast[MAXPLAYERS + 1];
 
 /**
+ * Array for flagging client to prevent duplicate messages.
+ */
+bool g_bPreventDuplicateMessage[MAXPLAYERS + 1];
+
+/**
  * SteamID cache for storing client mother zombie protection status.
  */
 Handle g_hInfectMotherCycle = INVALID_HANDLE;
@@ -878,9 +883,8 @@ void InfectStopCountdown()
  * @param motherinfect      (Optional) Indicates a mother zombie infect.
  * @param respawnoverride   (Optional) Set to true to override respawn cvar.
  * @param respawn           (Optional) Value to override with.
- * @param printmessage      (Optional) Print message to client.
  */
-bool InfectHumanToZombie(int client, int attacker = -1, bool motherinfect = false, bool respawnoverride = false, bool respawn = false, bool printmessage = true)
+bool InfectHumanToZombie(int client, int attacker = -1, bool motherinfect = false, bool respawnoverride = false, bool respawn = false)
 {
     // Forward pre-event to modules.
     Action result = APIOnClientInfect(client, attacker, motherinfect, respawnoverride, respawn);
@@ -981,7 +985,7 @@ bool InfectHumanToZombie(int client, int attacker = -1, bool motherinfect = fals
     SetEntProp(client, Prop_Send, "m_bHasHelmet", 0);
 
     // Print message to client.
-    if (printmessage)
+    if (!g_bPreventDuplicateMessage[client])
         TranslationPrintToChat(client, "Infect infected");
 
     // Forward event to modules.

@@ -38,7 +38,7 @@
 void RoundStartOnClientSpawn(int client)
 {
     // If client hasn't spawned yet, then stop.
-    if (!IsPlayerAlive(client))
+    if (!IsPlayerAlive(client) || !g_bPreventDuplicateMessage[client])
     {
         return;
     }
