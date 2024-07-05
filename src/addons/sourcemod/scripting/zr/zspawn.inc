@@ -198,7 +198,9 @@ void ZSpawnOnClientSpawn(int client)
             {
                 // Infect client.
                 InfectHumanToZombie(client);
+                // Problem here
                 LogMessage("Debug (ZSpawnOnClientSpawn): Infecting client %L", client);
+                PrintToChatAll("Blabla #2");
             }
         }
     }
