@@ -4,17 +4,17 @@ homepage: https://srcdslab.github.io/sm-plugin-zombiereloaded/
 author: SRCDSLAB <https://discord.gg/EFbtjSUUxG>
 
 environment:
-  sdk: '>=2.7.0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  args: ^1.5.2
+  args: ^2.2.0
   pwa: ^0.2.0
-  collection: ^1.14.12
-  quiver: ^2.1.2+1
-  csv: ^4.0.3
-#  path: ^1.4.1
+  collection: ^1.16.0
+  quiver: ^3.0.1
+  csv: ^5.0.0
+  path: ^1.8.0
 
 dev_dependencies:
-  build_runner: ^1.7.3
-  build_web_compilers: ^2.9.0
-  effective_dart: ^1.1.0
+  build_runner: ^2.1.7
+  build_web_compilers: ^2.14.0
+  effective_dart: ^2.0.0
