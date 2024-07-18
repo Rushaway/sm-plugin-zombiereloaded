@@ -178,14 +178,16 @@ public Action EventPlayerSpawn(Handle event, const char[] name, bool dontBroadca
     if (!index || index > MaxClients || !IsClientInGame(index))
         return Plugin_Continue;
 
-    LogMessage("EventPlayerSpawn: %d\n", index);
+    LogMessage("EventPlayerSpawn: %L\n", index);
     // Prevent to fire this event before client selected a team (CS:S fire this event when player get connected).
     int iTeam = GetClientTeam(index);
     if (iTeam <= CS_TEAM_SPECTATOR)
     {
-        LogMessage("EventPlayerSpawn HANDLED: %d - Team: %d\n", index, iTeam);
+        LogMessage("EventPlayerSpawn HANDLED: %L - Team: %d\n", index, iTeam);
         return Plugin_Handled;
     }
+
+    LogMessage("EventPlayerSpawn Passed !!: %L - Team: %d\n", index, iTeam);
 
     if (!g_bPreventDuplicateMessage[index])
         g_bPreventDuplicateMessage[index] = true;
