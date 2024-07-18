@@ -65,7 +65,7 @@ void EventsHook(bool unhook = false)
     HookEvent("round_freeze_end", EventRoundFreezeEnd);
     HookEvent("round_end", EventRoundEnd);
     HookEvent("player_team", EventPlayerTeam, EventHookMode_Pre);
-    HookEvent("player_spawn", EventPlayerSpawn);
+    HookEvent("player_spawn", EventPlayerSpawn, EventHookMode_Pre);
     HookEvent("player_death", EventPlayerDeath);
     HookEvent("player_jump", EventPlayerJump);
 
@@ -174,6 +174,15 @@ public Action EventPlayerSpawn(Handle event, const char[] name, bool dontBroadca
 {
     // Get all required event info.
     int index = GetClientOfUserId(GetEventInt(event, "userid"));
+
+    if (!index || index > MaxClients || !IsClientInGame(index))
+        return Plugin_Continue;
+
+    // Prevent to fire this event before client selected a team (CS:S fire this event when player get connected).
+    int iTeam = GetClientTeam(index);
+    if (iTeam <= CS_TEAM_SPECTATOR)
+        return Plugin_Handled;
+
     if (!g_bPreventDuplicateMessage[index])
         g_bPreventDuplicateMessage[index] = true;
 
