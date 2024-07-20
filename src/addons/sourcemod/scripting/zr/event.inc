@@ -83,7 +83,7 @@ void EventsHook(bool unhook = false)
  */
 public Action EventRoundStart(Handle event, const char[] name, bool dontBroadcast)
 {
-    PrintToChatAll("Debug:  Event RoundStart was called");
+    PrintToChatAll("Debug:  Event RoundStart was called - Time %d", GetTime());
     // Forward event to sub-modules.
     OverlaysOnRoundStart();
     RoundStartOnRoundStart();
@@ -106,7 +106,7 @@ public Action EventRoundStart(Handle event, const char[] name, bool dontBroadcas
  */
 public Action EventRoundFreezeEnd(Handle event, const char[] name, bool dontBroadcast)
 {
-    PrintToChatAll("Debug:  Event RoudnFreezeEnd was called");
+    PrintToChatAll("Debug:  Event RoudnFreezeEnd was called - Time %d", GetTime());
     // Forward events to modules.
     RoundEndOnRoundFreezeEnd();
     InfectOnRoundFreezeEnd();
@@ -124,7 +124,7 @@ public Action EventRoundFreezeEnd(Handle event, const char[] name, bool dontBroa
  */
 public Action EventRoundEnd(Handle event, const char[] name, bool dontBroadcast)
 {
-    PrintToChatAll("Debug:  Event RoundEnd was called");
+    PrintToChatAll("Debug:  Event RoundEnd was called - Time %d", GetTime());
     // Get all required event info.
     int reason = GetEventInt(event, "reason");
 
