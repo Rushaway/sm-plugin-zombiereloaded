@@ -952,44 +952,38 @@ public Action CommandPlayerBuy(int client, const char[] command, int argc)
     // if zombie hasn't spawned yet we're always rebuying:
     bool zmarketfreespawn = GetConVarBool(g_hCvarsList.CVAR_WEAPONS_ZMARKET_FREESPAWN);
     if (!(zmarketfreespawn && !InfectHasZombieSpawned()))
-    {
-        PrintToChatAll("You can't buy weapons before the first zombie has spawned!");
         return Plugin_Continue;
-    }
 
     ConVar cv_StartMoney = FindConVar("mp_startmoney");
     if (cv_StartMoney == null)
-    {
-        PrintToChatAll("You can't buy weapons before the first zombie has spawned! (3)");
         return Plugin_Continue;
-    }
 
     int iDefaultCash = GetConVarInt(cv_StartMoney);
-    PrintToChatAll("iDefaultCash: %d", iDefaultCash);
     delete cv_StartMoney;
 
-    DataPack hPack = new DataPack();
-    hPack.WriteCell(GetClientUserId(client));
-    hPack.WriteCell(iDefaultCash);
-    RequestFrame(DelayedBuyRefund, hPack);
+    AccountSetClientCash(client, iDefaultCash);
+
+    // DataPack hPack = new DataPack();
+    // hPack.WriteCell(GetClientUserId(client));
+    // hPack.WriteCell(iDefaultCash);
+    // RequestFrame(DelayedBuyRefund, hPack);
 
     return Plugin_Continue;
 }
 
-void DelayedBuyRefund(DataPack hPack)
-{
-	hPack.Reset();
-    int client = hPack.ReadCell();
-    client = GetClientOfUserId(client);
-    int iDefaultCash = hPack.ReadCell();
-    PrintToChatAll("DelayedBuyRefund: %L %d", client, iDefaultCash);
-    if (client)
-    {
-        AccountSetClientCash(client, iDefaultCash);
-        PrintToChat(client, "Set cash to %d for %L", iDefaultCash, client);
-    }
-    delete hPack;
-}
+// void DelayedBuyRefund(DataPack hPack)
+// {
+// 	hPack.Reset();
+//     int client = hPack.ReadCell();
+//     client = GetClientOfUserId(client);
+//     int iDefaultCash = hPack.ReadCell();
+//     PrintToChatAll("DelayedBuyRefund: %L %d", client, iDefaultCash);
+//     if (client)
+//     {
+//         AccountSetClientCash(client, iDefaultCash);
+//     }
+//     delete hPack;
+// }
 
 /**
  * Equip a weapon on a client.
