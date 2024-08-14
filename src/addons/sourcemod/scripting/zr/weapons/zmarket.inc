@@ -951,7 +951,7 @@ public Action CommandPlayerBuy(int client, const char[] command, int argc)
 {
     // if zombie hasn't spawned yet we're always rebuying:
     bool zmarketfreespawn = GetConVarBool(g_hCvarsList.CVAR_WEAPONS_ZMARKET_FREESPAWN);
-    if (!zmarketfreespawn || InfectHasZombieSpawned())
+    if (!(zmarketfreespawn && !InfectHasZombieSpawned()))
         return Plugin_Continue;
 
     PrintToChatAll("You can't buy weapons before the first zombie has spawned!");
