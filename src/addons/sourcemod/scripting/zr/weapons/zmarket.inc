@@ -6,7 +6,7 @@
  *  File:          zmarket.inc
  *  Type:          Module
  *  Description:   ZMarket module, provides menu of weapons to buy from.
- *f
+ *
  *  Copyright (C) 2009-2013  Greyscale, Richard Helgeby
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -961,29 +961,25 @@ public Action CommandPlayerBuy(int client, const char[] command, int argc)
     int iDefaultCash = GetConVarInt(cv_StartMoney);
     delete cv_StartMoney;
 
-    AccountSetClientCash(client, iDefaultCash);
-
-    // DataPack hPack = new DataPack();
-    // hPack.WriteCell(GetClientUserId(client));
-    // hPack.WriteCell(iDefaultCash);
-    // RequestFrame(DelayedBuyRefund, hPack);
+    DataPack hPack = new DataPack();
+    hPack.WriteCell(GetClientUserId(client));
+    hPack.WriteCell(iDefaultCash);
+    RequestFrame(DelayedBuyRefund, hPack);
 
     return Plugin_Continue;
 }
 
-// void DelayedBuyRefund(DataPack hPack)
-// {
-// 	hPack.Reset();
-//     int client = hPack.ReadCell();
-//     client = GetClientOfUserId(client);
-//     int iDefaultCash = hPack.ReadCell();
-//     PrintToChatAll("DelayedBuyRefund: %L %d", client, iDefaultCash);
-//     if (client)
-//     {
-//         AccountSetClientCash(client, iDefaultCash);
-//     }
-//     delete hPack;
-// }
+void DelayedBuyRefund(DataPack hPack)
+{
+	hPack.Reset();
+    int userid = hPack.ReadCell();
+    int iDefaultCash = hPack.ReadCell();
+    delete hPack;
+
+    int client = GetClientOfUserId(userid);
+    if (client)
+        AccountSetClientCash(client, iDefaultCash);
+}
 
 /**
  * Equip a weapon on a client.
