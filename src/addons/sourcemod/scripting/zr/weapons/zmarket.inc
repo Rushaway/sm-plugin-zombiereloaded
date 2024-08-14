@@ -6,7 +6,7 @@
  *  File:          zmarket.inc
  *  Type:          Module
  *  Description:   ZMarket module, provides menu of weapons to buy from.
- *
+ *f
  *  Copyright (C) 2009-2013  Greyscale, Richard Helgeby
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -954,14 +954,6 @@ public Action CommandPlayerBuy(int client, const char[] command, int argc)
     if (!(zmarketfreespawn && !InfectHasZombieSpawned()))
     {
         PrintToChatAll("You can't buy weapons before the first zombie has spawned!");
-        return Plugin_Continue;
-    }
-
-    char sWeapon[64];
-    GetCmdArg(1, sWeapon, sizeof(sWeapon));
-    if (StrContains(sWeapon, "weapon_") != 0)
-    {
-        PrintToChatAll("You can't buy weapons before the first zombie has spawned! (2)");
         return Plugin_Continue;
     }
 
