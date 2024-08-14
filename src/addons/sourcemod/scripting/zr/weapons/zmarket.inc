@@ -955,8 +955,8 @@ public Action CommandPlayerBuy(int client, const char[] command, int argc)
         return Plugin_Continue;
 
     char sWeapon[64];
-	GetCmdArg(1, sWeapon, sizeof(sWeapon));
-	if (StrContains(sWeapon, "weapon_") != 0)
+    GetCmdArg(1, sWeapon, sizeof(sWeapon));
+    if (StrContains(sWeapon, "weapon_") != 0)
         return Plugin_Continue;
 
     ConVar cv_StartMoney = FindConVar("mp_startmoney");
@@ -964,10 +964,24 @@ public Action CommandPlayerBuy(int client, const char[] command, int argc)
         return Plugin_Continue;
 
     int iDefaultCash = GetConVarInt(cv_StartMoney);
-    AccountSetClientCash(client, iDefaultCash);
-
     delete cv_StartMoney;
+
+    DataPack hPack = new DataPack();
+    hPack.WriteCell(GetClientUserId(client));
+    hPack.WriteCell(iDefaultCash);
+    RequestFrame(DelayedBuyRefund, hPack);
+
     return Plugin_Continue;
+}
+
+void DelayedBuyRefund(DataPack hPack)
+{
+	hPack.Reset();
+    int client = hPack.ReadCell();
+    int iDefaultCash = hPack.ReadCell();
+    if (client)
+        AccountSetClientCash(client, iDefaultCash);
+    delete hPack;
 }
 
 /**
