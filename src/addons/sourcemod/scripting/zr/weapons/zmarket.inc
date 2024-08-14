@@ -952,24 +952,28 @@ public Action CommandPlayerBuy(int client, const char[] command, int argc)
     // if zombie hasn't spawned yet we're always rebuying:
     bool zmarketfreespawn = GetConVarBool(g_hCvarsList.CVAR_WEAPONS_ZMARKET_FREESPAWN);
     if (!(zmarketfreespawn && !InfectHasZombieSpawned()))
+    {
+        PrintToChatAll("You can't buy weapons before the first zombie has spawned!");
         return Plugin_Continue;
-
-    PrintToChatAll("You can't buy weapons before the first zombie has spawned!");
+    }
 
     char sWeapon[64];
     GetCmdArg(1, sWeapon, sizeof(sWeapon));
     if (StrContains(sWeapon, "weapon_") != 0)
+    {
+        PrintToChatAll("You can't buy weapons before the first zombie has spawned! (2)");
         return Plugin_Continue;
-
-    PrintToChatAll("You can't buy weapons before the first zombie has spawned! (2)");
+    }
 
     ConVar cv_StartMoney = FindConVar("mp_startmoney");
     if (cv_StartMoney == null)
+    {
+        PrintToChatAll("You can't buy weapons before the first zombie has spawned! (3)");
         return Plugin_Continue;
-
-    PrintToChatAll("You can't buy weapons before the first zombie has spawned! (3)");
+    }
 
     int iDefaultCash = GetConVarInt(cv_StartMoney);
+    PrintToChatAll("iDefaultCash: %d", iDefaultCash);
     delete cv_StartMoney;
 
     DataPack hPack = new DataPack();
@@ -986,6 +990,7 @@ void DelayedBuyRefund(DataPack hPack)
     int client = hPack.ReadCell();
     client = GetClientOfUserId(client);
     int iDefaultCash = hPack.ReadCell();
+    PrintToChatAll("DelayedBuyRefund: %L %d", client, iDefaultCash);
     if (client)
     {
         AccountSetClientCash(client, iDefaultCash);
