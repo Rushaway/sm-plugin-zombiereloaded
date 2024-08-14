@@ -940,6 +940,37 @@ public int ZMarketMenuTypeWeaponsHandle(Handle menu_zmarket_typeweapons, MenuAct
 }
 
 /**
+ * Command callback (buy)
+ * Client is buying a weapon.
+ *
+ * @param client    The client.
+ * @param command   The command performed.
+ * @param argc      The amount of arguments.
+ */
+public Action CommandPlayerBuy(int client, const char[] command, int argc)
+{
+    // if zombie hasn't spawned yet we're always rebuying:
+    bool zmarketfreespawn = GetConVarBool(g_hCvarsList.CVAR_WEAPONS_ZMARKET_FREESPAWN);
+    if (!zmarketfreespawn || InfectHasZombieSpawned())
+        return Plugin_Continue;
+
+    char sWeapon[64];
+	GetCmdArg(1, sWeapon, sizeof(sWeapon));
+	if (StrContains(sWeapon, "weapon_") != 0)
+        return Plugin_Continue;
+
+    ConVar cv_StartMoney = FindConVar("mp_startmoney");
+    if (cv_StartMoney == null)
+        return Plugin_Continue;
+
+    int iDefaultCash = GetConVarInt(cv_StartMoney);
+    AccountSetClientCash(client, iDefaultCash);
+
+    delete cv_StartMoney;
+    return Plugin_Continue;
+}
+
+/**
  * Equip a weapon on a client.
  *
  * @param client    The client index.
