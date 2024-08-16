@@ -949,7 +949,10 @@ public int ZMarketMenuTypeWeaponsHandle(Handle menu_zmarket_typeweapons, MenuAct
  */
 public Action CommandPlayerBuy(int client, const char[] command, int argc)
 {
-    LogMessage("CommandPlayerBuy %s - %L", command, client);
+    // Get cmd arg.
+    char weapon[64];
+    GetCmdArg(1, weapon, sizeof(weapon));
+    LogMessage("CommandPlayerBuy %s - %s - %L", command, weapon, client);
     bool zmarketfreespawn = GetConVarBool(g_hCvarsList.CVAR_WEAPONS_ZMARKET_FREESPAWN);
     if (!(zmarketfreespawn && !InfectHasZombieSpawned()))
         return Plugin_Continue;
