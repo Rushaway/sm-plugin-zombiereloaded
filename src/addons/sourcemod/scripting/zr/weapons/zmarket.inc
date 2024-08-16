@@ -949,7 +949,7 @@ public int ZMarketMenuTypeWeaponsHandle(Handle menu_zmarket_typeweapons, MenuAct
  */
 public Action CommandPlayerBuy(int client, const char[] command, int argc)
 {
-    // if zombie hasn't spawned yet we're always rebuying:
+    LogMessage("CommandPlayerBuy %s - %L", command, client);
     bool zmarketfreespawn = GetConVarBool(g_hCvarsList.CVAR_WEAPONS_ZMARKET_FREESPAWN);
     if (!(zmarketfreespawn && !InfectHasZombieSpawned()))
         return Plugin_Continue;
@@ -971,7 +971,7 @@ public Action CommandPlayerBuy(int client, const char[] command, int argc)
 
 void DelayedBuyRefund(DataPack hPack)
 {
-	hPack.Reset();
+    hPack.Reset();
     int userid = hPack.ReadCell();
     int iDefaultCash = hPack.ReadCell();
     delete hPack;
