@@ -949,10 +949,6 @@ public int ZMarketMenuTypeWeaponsHandle(Handle menu_zmarket_typeweapons, MenuAct
  */
 public Action CommandPlayerBuy(int client, const char[] command, int argc)
 {
-    // Get cmd arg.
-    char weapon[64];
-    GetCmdArg(1, weapon, sizeof(weapon));
-    LogMessage("CommandPlayerBuy %s - %s - %L", command, weapon, client);
     bool zmarketfreespawn = GetConVarBool(g_hCvarsList.CVAR_WEAPONS_ZMARKET_FREESPAWN);
     if (!(zmarketfreespawn && !InfectHasZombieSpawned()))
         return Plugin_Continue;
@@ -967,6 +963,7 @@ public Action CommandPlayerBuy(int client, const char[] command, int argc)
     DataPack hPack = new DataPack();
     hPack.WriteCell(GetClientUserId(client));
     hPack.WriteCell(iDefaultCash);
+    // we need to request a frame to let buy transaction finish before we refund the money
     RequestFrame(DelayedBuyRefund, hPack);
 
     return Plugin_Continue;
@@ -980,8 +977,7 @@ void DelayedBuyRefund(DataPack hPack)
     delete hPack;
 
     int client = GetClientOfUserId(userid);
-    if (client)
-        AccountSetClientCash(client, iDefaultCash);
+    AccountSetClientCash(client, iDefaultCash);
 }
 
 /**
