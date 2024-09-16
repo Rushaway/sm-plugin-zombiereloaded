@@ -254,7 +254,8 @@ void ConfigLoad()
 	}
 
 	// Execute config file.
-	ServerCommand("exec %s", mapconfig);
+	ServerCommand("exec %s", path);
+	LogMessage("Executed map config file: %s", path);
 
 	// Log action.
 	LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Map Configs", "Executed map config file: %s", path);
