@@ -221,7 +221,6 @@ void ConfigLoad()
 		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
 		Format(path, sizeof(path), "cfg/%s", mapconfig);
 	}
-	LogMessage("Current path: %s", path);
 
 	// Check if the file exist.
 	bool cfgexists = FileExists(path);
@@ -245,8 +244,6 @@ void ConfigLoad()
 			Format(path, sizeof(path), "cfg/%s", mapconfig);
 		}
 
-		LogMessage("Current path: %s", path);
-
 		// Check if the new file path exist.
 		cfgexists = FileExists(path);
 		// File doesn't exist, then stop.
@@ -254,49 +251,48 @@ void ConfigLoad()
 			return;
 	}
 
-	// Execute config file.
-	ConfigLoadAndExec(path);
-	LogMessage("Executed map config file: %s", path);
+	// Execute config file - Log action if successful.
+	if (LoadConfigAndExec(path, bSMPath))
+		LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Map Configs", "Executed map config file: %s", path);
 
-	// Log action.
-	LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Map Configs", "Executed map config file: %s", path);
 }
 
-void ConfigLoadAndExec(char[] filepath)
+/**
+ * Workaround to execute file from game/cfgs
+ * Or from addons/sourcemo/configs/zr/maps
+ */
+bool LoadConfigAndExec(char[] filepath, bool bSMPath = false)
 {
-    char line[PLATFORM_MAX_PATH];
-    File hFile = OpenFile(filepath, "r"); // Open the file in read mode
-    
-    // Check if the file was opened successfully
-    if (hFile == null)
-    {
-        PrintToServer("Failed to open config file: %s", filepath);
-        return;
-    }
-    
-    // Read each line and execute it
-    while (ReadFileLine(hFile, line, sizeof(line)))
-    {
-        // Remove any newline or whitespace characters
-        TrimString(line);
-        
-		PrintToServer("Line: %s", line);
-        // Skip empty lines or comments (assuming comments start with //)
-        if (line[0] == '\0' || StrContains(line, "//") == 0)
-        {
-            continue;
-        }
-        
-        // Execute the command
-        ServerCommand("%s", line);
-    }
-    
-    // Close the file when done
-    CloseHandle(hFile);
-    
-    PrintToServer("Executed config file: %s", filepath);
-}
+	if (!bSMPath)
+	{
+		ServerCommand("exec %s", path);
+		return true;
+	}
 
+	char line[PLATFORM_MAX_PATH];
+	File hFile = OpenFile(filepath, "r");
+
+	// Check if the file was opened successfully
+	if (hFile == null)
+		return false;
+
+	// Read each line and execute it
+	while (ReadFileLine(hFile, line, sizeof(line)))
+	{
+		// Remove any newline or whitespace characters
+		TrimString(line);
+
+		// Skip empty lines or comments
+		if (line[0] == '\0' || StrContains(line, "//") == 0)
+			continue;
+
+		// Execute the command
+		ServerCommand("%s", line);
+	}
+
+	CloseHandle(hFile);
+	return true;
+}
 
 /**
  * Executed when modules are done loading. After all init calls in
