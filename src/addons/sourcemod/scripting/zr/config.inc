@@ -265,7 +265,7 @@ bool LoadConfigAndExec(char[] filepath, bool bSMPath = false)
 {
 	if (!bSMPath)
 	{
-		ServerCommand("exec %s", path);
+		ServerCommand("exec %s", filepath);
 		return true;
 	}
 
