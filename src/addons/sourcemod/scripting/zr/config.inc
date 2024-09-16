@@ -204,15 +204,26 @@ void ConfigLoad()
 {
 	char mapname[256];
 	char mapconfig[PLATFORM_MAX_PATH];
-	
+
 	// Get map name and format into config path.
 	GetCurrentMap(mapname, sizeof(mapname));
-	Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
-	
+
+	bool bSMPath = GetConVarBool(g_hCvarsList.CVAR_CONFIG_SM_PATH);
+
+	if (bSMPath)
+	{
+		Format(mapconfig, sizeof(mapconfig), "configs/zr/maps/%s.cfg", mapname);
+		BuildPath(Path_SM, mapconfig, PLATFORM_MAX_PATH, "configs/zr/maps/%s.cfg", mapname);
+	}
+	else
+	{
+		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
+	}
+
 	// Prepend cfg to path.
 	char path[PLATFORM_MAX_PATH];
 	Format(path, sizeof(path), "cfg/%s", mapconfig);
-	
+
 	// Check if the file exist.
 	bool cfgexists = FileExists(path);
 	if (!cfgexists)
@@ -222,8 +233,18 @@ void ConfigLoad()
 		{
 			mapname[i] = CharToLower(mapname[i]);
 		}
-		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
-		Format(path, sizeof(path), "cfg/%s", mapconfig);
+
+		if (bSMPath)
+		{
+			Format(mapconfig, sizeof(mapconfig), "configs/zr/maps/%s.cfg", mapname);
+			BuildPath(Path_SM, mapconfig, PLATFORM_MAX_PATH, "configs/zr/maps/%s.cfg", mapname);
+			Format(path, sizeof(path), "addons/sourcemod/%s", mapconfig);
+		}
+		else
+		{
+			Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
+			Format(path, sizeof(path), "cfg/%s", mapconfig);
+		}
 
 		// Check if the new file path exist.
 		cfgexists = FileExists(path);
@@ -231,10 +252,10 @@ void ConfigLoad()
 		if (!cfgexists)
 			return;
 	}
-	
+
 	// Execute config file.
 	ServerCommand("exec %s", mapconfig);
-	
+
 	// Log action.
 	LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Map Configs", "Executed map config file: %s", path);
 }
