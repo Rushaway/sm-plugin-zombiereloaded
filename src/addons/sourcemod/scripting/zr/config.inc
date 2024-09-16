@@ -255,12 +255,48 @@ void ConfigLoad()
 	}
 
 	// Execute config file.
-	ServerCommand("exec %s", path);
+	ConfigLoadAndExec("%s", path);
 	LogMessage("Executed map config file: %s", path);
 
 	// Log action.
 	LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Map Configs", "Executed map config file: %s", path);
 }
+
+void ConfigLoadAndExec(const char[] filepath)
+{
+    char line[PLATFORM_MAX_PATH];
+    File hFile = OpenFile(filepath, "r"); // Open the file in read mode
+    
+    // Check if the file was opened successfully
+    if (hFile == null)
+    {
+        PrintToServer("Failed to open config file: %s", filepath);
+        return;
+    }
+    
+    // Read each line and execute it
+    while (ReadFileLine(hFile, line, sizeof(line)))
+    {
+        // Remove any newline or whitespace characters
+        TrimString(line);
+        
+		PrintToServer("Line: %s", line);
+        // Skip empty lines or comments (assuming comments start with //)
+        if (line[0] == '\0' || StrContains(line, "//") == 0)
+        {
+            continue;
+        }
+        
+        // Execute the command
+        ServerCommand("%s", line);
+    }
+    
+    // Close the file when done
+    CloseHandle(hFile);
+    
+    PrintToServer("Executed config file: %s", filepath);
+}
+
 
 /**
  * Executed when modules are done loading. After all init calls in
