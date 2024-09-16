@@ -255,14 +255,14 @@ void ConfigLoad()
 	}
 
 	// Execute config file.
-	ConfigLoadAndExec("%s", path);
+	ConfigLoadAndExec(path);
 	LogMessage("Executed map config file: %s", path);
 
 	// Log action.
 	LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Map Configs", "Executed map config file: %s", path);
 }
 
-void ConfigLoadAndExec(const char[] filepath)
+void ConfigLoadAndExec(char[] filepath)
 {
     char line[PLATFORM_MAX_PATH];
     File hFile = OpenFile(filepath, "r"); // Open the file in read mode
