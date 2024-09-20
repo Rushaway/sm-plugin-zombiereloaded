@@ -52,32 +52,38 @@ APINapalmInit()
 
 /**
  * Native call function (ZR_ClassHasNapalm)
- * True if the class has napalm grenades, false otherwise.
+ * Get if the class has napalm grenades.
+ * 
+ * bool ClassGetHasNapalm(int index, int cachetype = ZR_CLASS_CACHE_PLAYER)
  */
 public int APIClassHasNapalm(Handle plugin, int numParams)
 {
     int client = GetNativeCell(1);
+    int cacheType = GetNativeCell(2);
 
     // Validate the client index.
-    APIValidateClientIndex(client, Condition_True);
+    APIValidateClientIndex(client, Condition_Either);
 
     // Return the value.
-    return view_as<int>(ClassGetHasNapalm(client));
+    return view_as<int>(ClassGetHasNapalm(client, cacheType));
 }
 
 /**
  * Native call function (ZR_ClassGetNapalmTime)
- * The napalm grenades time from the specified class. -1.0 on error.
+ * Get the napalm grenades time from the specified class.
+ * 
+ * float ClassGetNapalmTime(int index, int cachetype = ZR_CLASS_CACHE_PLAYER)
  */
 public int APIClassGetNapalmTime(Handle plugin, int numParams)
 {
     int client = GetNativeCell(1);
+    int cacheType = GetNativeCell(2);
 
     // Validate the client index.
-    APIValidateClientIndex(client, Condition_True);
+    APIValidateClientIndex(client, Condition_Either);
 
     // Return the value.
-    return view_as<float>(ClassGetNapalmTime(client));
+    return view_as<float>(ClassGetNapalmTime(client, cacheType));
 }
 
 /**
