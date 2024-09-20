@@ -41,10 +41,43 @@ APINapalmInit()
 {
     // Infect module natives/forwards (napalm.zr.inc)
 
+    // Natives
+    CreateNative("ZR_ClassHasNapalm", APIClassHasNapalm);
+    CreateNative("ZR_ClassGetNapalmTime", APIClassGetNapalmTime);
+
     // Forwards
     g_hAPIFwdOnClientIgnite = CreateGlobalForward("ZR_OnClientIgnite", ET_Hook, Param_CellByRef, Param_FloatByRef);
     g_hAPIFwdOnClientIgnited = CreateGlobalForward("ZR_OnClientIgnited", ET_Hook, Param_CellByRef, Param_FloatByRef);
+}
 
+/**
+ * Native call function (ZR_ClassHasNapalm)
+ * True if the class has napalm grenades, false otherwise.
+ */
+public int APIClassHasNapalm(Handle plugin, int numParams)
+{
+    int client = GetNativeCell(1);
+
+    // Validate the client index.
+    APIValidateClientIndex(client, Condition_True);
+
+    // Return the value.
+    return view_as<int>(ClassGetHasNapalm(client));
+}
+
+/**
+ * Native call function (ZR_ClassGetNapalmTime)
+ * The napalm grenades time from the specified class. -1.0 on error.
+ */
+public float APIClassGetNapalmTime(Handle plugin, int numParams)
+{
+    int client = GetNativeCell(1);
+
+    // Validate the client index.
+    APIValidateClientIndex(client, Condition_True);
+
+    // Return the value.
+    return view_as<float>(ClassGetNapalmTime(client));
 }
 
 /**
