@@ -74,7 +74,7 @@ public int APIClassHasNapalm(Handle plugin, int numParams)
  * 
  * float ClassGetNapalmTime(int index, int cachetype = ZR_CLASS_CACHE_PLAYER)
  */
-public int APIClassGetNapalmTime(Handle plugin, int numParams)
+public float APIClassGetNapalmTime(Handle plugin, int numParams)
 {
     int client = GetNativeCell(1);
     int cacheType = GetNativeCell(2);
@@ -83,7 +83,7 @@ public int APIClassGetNapalmTime(Handle plugin, int numParams)
     APIValidateClientIndex(client, Condition_Either);
 
     // Return the value.
-    return view_as<float>(ClassGetNapalmTime(client, cacheType));
+    return ClassGetNapalmTime(client, cacheType);
 }
 
 /**
