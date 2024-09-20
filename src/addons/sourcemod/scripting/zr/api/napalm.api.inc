@@ -69,7 +69,7 @@ public int APIClassHasNapalm(Handle plugin, int numParams)
  * Native call function (ZR_ClassGetNapalmTime)
  * The napalm grenades time from the specified class. -1.0 on error.
  */
-public float APIClassGetNapalmTime(Handle plugin, int numParams)
+public int APIClassGetNapalmTime(Handle plugin, int numParams)
 {
     int client = GetNativeCell(1);
 
