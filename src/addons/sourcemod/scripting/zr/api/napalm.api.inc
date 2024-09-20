@@ -74,7 +74,7 @@ public int APIClassHasNapalm(Handle plugin, int numParams)
  * 
  * float ClassGetNapalmTime(int index, int cachetype = ZR_CLASS_CACHE_PLAYER)
  */
-public float APIClassGetNapalmTime(Handle plugin, int numParams)
+public any APIClassGetNapalmTime(Handle plugin, int numParams)
 {
     int client = GetNativeCell(1);
     int cacheType = GetNativeCell(2);
