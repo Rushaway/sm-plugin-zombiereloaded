@@ -204,15 +204,24 @@ void ConfigLoad()
 {
 	char mapname[256];
 	char mapconfig[PLATFORM_MAX_PATH];
-	
+	char path[PLATFORM_MAX_PATH];
+
 	// Get map name and format into config path.
 	GetCurrentMap(mapname, sizeof(mapname));
-	Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
-	
-	// Prepend cfg to path.
-	char path[PLATFORM_MAX_PATH];
-	Format(path, sizeof(path), "cfg/%s", mapconfig);
-	
+
+	bool bSMPath = GetConVarBool(g_hCvarsList.CVAR_CONFIG_SM_PATH);
+
+	if (bSMPath)
+	{
+		Format(mapconfig, sizeof(mapconfig), "configs/zr/maps/%s.cfg", mapname);
+		BuildPath(Path_SM, path, PLATFORM_MAX_PATH, mapconfig);
+	}
+	else
+	{
+		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
+		Format(path, sizeof(path), "cfg/%s", mapconfig);
+	}
+
 	// Check if the file exist.
 	bool cfgexists = FileExists(path);
 	if (!cfgexists)
@@ -222,8 +231,20 @@ void ConfigLoad()
 		{
 			mapname[i] = CharToLower(mapname[i]);
 		}
-		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
-		Format(path, sizeof(path), "cfg/%s", mapconfig);
+
+		if (bSMPath)
+		{
+			Format(mapconfig, sizeof(mapconfig), "configs/zr/maps/%s.cfg", mapname);
+			BuildPath(Path_SM, path, PLATFORM_MAX_PATH, mapconfig);
+			LogMessage(path);
+			Format(path, sizeof(path), "addons/sourcemod/%s", mapconfig);
+			LogMessage(path);
+		}
+		else
+		{
+			Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.cfg", mapname);
+			Format(path, sizeof(path), "cfg/%s", mapconfig);
+		}
 
 		// Check if the new file path exist.
 		cfgexists = FileExists(path);
@@ -231,12 +252,61 @@ void ConfigLoad()
 		if (!cfgexists)
 			return;
 	}
-	
-	// Execute config file.
-	ServerCommand("exec %s", mapconfig);
-	
-	// Log action.
-	LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Map Configs", "Executed map config file: %s", path);
+
+	// Execute config file - Log action if successful.
+	if (LoadConfigAndExec(path, bSMPath))
+		LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Map Configs", "Executed map config file: %s", path);
+}
+
+/**
+ * Workaround to execute file from game/cfgs
+ * Or from addons/sourcemod/configs/zr/maps
+ */
+bool LoadConfigAndExec(char[] filepath, bool bSMPath = false)
+{
+	if (!bSMPath)
+	{
+		ServerCommand("exec %s", filepath);
+		return true;
+	}
+
+	char line[PLATFORM_MAX_PATH];
+	File hFile = OpenFile(filepath, "r");
+
+	// Check if the file was opened successfully
+	if (hFile == null)
+		return false;
+
+	// Read each line and execute it
+	while (ReadFileLine(hFile, line, sizeof(line)))
+	{
+		// Remove any newline or whitespace characters
+		TrimString(line);
+
+		// Skip empty lines
+		if (line[0] == '\0')
+			continue;
+
+		// Find the position of "//" in the line
+		int commentIndex = StrContains(line, "//", false);
+		
+		// If a comment is found, truncate the line at that point
+		if (commentIndex != -1)
+		{
+			line[commentIndex] = '\0';
+			TrimString(line);
+		}
+
+		// Skip lines that are empty after removing comments
+		if (line[0] == '\0')
+			continue;
+
+		// Execute the command
+		ServerCommand("%s", line);
+	}
+
+	CloseHandle(hFile);
+	return true;
 }
 
 /**
@@ -309,7 +379,7 @@ void ConfigOnAllPluginsLoaded()
  */
 void ConfigOnLibraryAdded(const char[] name)
 {
-    if (StrEqual(name, "configlist"))
+    if (strcmp(name, "configlist", false) == 0)
     {
         // ConfigList loaded.
         g_ConfigListAvailable = true;
@@ -321,7 +391,7 @@ void ConfigOnLibraryAdded(const char[] name)
  */
 void ConfigOnLibraryRemoved(const char[] name)
 {
-    if (StrEqual(name, "configlist"))
+    if (strcmp(name, "configlist", false) == 0)
     {
         // ConfigList was unloaded.
         g_ConfigListAvailable = false;
@@ -835,7 +905,7 @@ stock ConfigFile ConfigAliasToConfigFile(const char[] alias)
 		ConfigGetConfigAlias(view_as<ConfigFile>(x), checkalias, sizeof(checkalias));
 		
 		// If alias doesn't match, then stop.
-		if (!StrEqual(alias, checkalias, false))
+		if (strcmp(alias, checkalias, false) != 0)
 		{
 			continue;
 		}
@@ -971,7 +1041,7 @@ public Action ConfigReloadAllCommand(int client, int argc)
 stock bool ConfigSettingToBool(const char[] option)
 {
     // If option is equal to "yes," then return true.
-    if (StrEqual(option, "yes", false) || StrEqual(option, "on", false) || StrEqual(option, "1", false))
+    if (strcmp(option, "yes", false) == 0 || strcmp(option, "on", false) == 0 || strcmp(option, "1", false) == 0)
     {
         return true;
     }
