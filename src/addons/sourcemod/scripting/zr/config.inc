@@ -294,15 +294,21 @@ bool LoadConfigAndExec(char[] filepath, bool bSMPath = false)
 		if (commentIndex != -1)
 		{
 			line[commentIndex] = '\0';
+			LogMessage(line);
 			TrimString(line);
+			LogMessage(line);
 		}
 
 		// Skip lines that are empty after removing comments
 		if (line[0] == '\0')
+		{
+			LogMessage("Empty line, skip");
 			continue;
+		}
 
 		// Execute the command
 		ServerCommand("%s", line);
+		LogMessage("Executed line: %s", line);
 	}
 
 	CloseHandle(hFile);
