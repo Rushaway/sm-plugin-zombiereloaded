@@ -277,25 +277,22 @@ bool LoadConfigAndExec(char[] filepath, bool bSMPath = false)
 	// Read each line and execute it
 	while (ReadFileLine(hFile, line, sizeof(line)))
 	{
+		// If line is empty go to next line.
+		if (!line[0])
+			continue;
+
 		// Remove any newline or whitespace characters
 		TrimString(line);
 
-		// Skip empty lines
-		if (line[0] == '\0')
-			continue;
-
-		// Find the position of "//" in the line
-		int commentIndex = StrContains(line, "//", false);
+		// Cut out comments at the end of a line.
+		if (StrContains(line, "//") > -1)
+			SplitString(line, "//", line, sizeof(line));
 		
-		// If a comment is found, truncate the line at that point
-		if (commentIndex != -1)
-		{
-			line[commentIndex] = '\0';
-			TrimString(line);
-		}
-
-		// Skip lines that are empty after removing comments
-		if (line[0] == '\0')
+		// Trim off whitespace.
+		TrimString(line);
+		
+		// If line is empty, then stop.
+		if (!line[0])
 			continue;
 
 		// Execute the command
@@ -317,18 +314,23 @@ void ConfigOnModulesLoaded()
 	char mapname[256];
 	char mapconfig[PLATFORM_MAX_PATH];
 	char path[PLATFORM_MAX_PATH];
-	
+
 	// Get map name and format into config path.
 	GetCurrentMap(mapname, sizeof(mapname));
-	Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.post.cfg", mapname);
-	
-	// Prepend cfg to path.
-	Format(path, sizeof(path), "cfg/%s", mapconfig);
-	
-	// Workaround for bug 3083 in SourceMod compiler. Having FileExist directly
-	// in the if in this function makes it crash. Storing the result in a
-	// boolean first works.
-	
+
+	bool bSMPath = GetConVarBool(g_hCvarsList.CVAR_CONFIG_SM_PATH);
+
+	if (bSMPath)
+	{
+		Format(mapconfig, sizeof(mapconfig), "configs/zr/maps/%s.post.cfg", mapname);
+		BuildPath(Path_SM, path, PLATFORM_MAX_PATH, mapconfig);
+	}
+	else
+	{
+		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.post.cfg", mapname);
+		Format(path, sizeof(path), "cfg/%s", mapconfig);
+	}
+
 	// Check if the file exist.
 	bool cfgexists = FileExists(path);
 	if (!cfgexists)
@@ -338,8 +340,17 @@ void ConfigOnModulesLoaded()
 		{
 			mapname[i] = CharToLower(mapname[i]);
 		}
-		Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.post.cfg", mapname);
-		Format(path, sizeof(path), "cfg/%s", mapconfig);
+
+		if (bSMPath)
+		{
+			Format(mapconfig, sizeof(mapconfig), "configs/zr/maps/%s.post.cfg", mapname);
+			BuildPath(Path_SM, path, PLATFORM_MAX_PATH, mapconfig);
+		}
+		else
+		{
+			Format(mapconfig, sizeof(mapconfig), "sourcemod/zombiereloaded/%s.post.cfg", mapname);
+			Format(path, sizeof(path), "cfg/%s", mapconfig);
+		}
 
 		// Check if the new file path exist.
 		cfgexists = FileExists(path);
@@ -347,7 +358,7 @@ void ConfigOnModulesLoaded()
 		if (!cfgexists)
 			return;
 	}
-	
+
 	// Check if ConfigList is available.
 	if (g_ConfigListAvailable)
 	{
@@ -355,12 +366,10 @@ void ConfigOnModulesLoaded()
 		// may not exist, but that's ok.
 		ServerCommand("cfglist_exec_list zr_post_exec");
 	}
-	
-	// Execute config file.
-	ServerCommand("exec %s", mapconfig);
-	
-	// Log action.
-	LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Post Map Configs", "Executed post map config file: %s", path);
+
+	// Execute config file - Log action if successful.
+	if (LoadConfigAndExec(path, bSMPath))
+		LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Post Map Configs", "Executed post map config file: %s", path);
 }
 
 /**
