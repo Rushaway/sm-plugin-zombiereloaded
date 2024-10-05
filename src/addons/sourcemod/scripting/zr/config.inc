@@ -236,9 +236,7 @@ void ConfigLoad()
 		{
 			Format(mapconfig, sizeof(mapconfig), "configs/zr/maps/%s.cfg", mapname);
 			BuildPath(Path_SM, path, PLATFORM_MAX_PATH, mapconfig);
-			LogMessage(path);
 			Format(path, sizeof(path), "addons/sourcemod/%s", mapconfig);
-			LogMessage(path);
 		}
 		else
 		{
@@ -294,21 +292,17 @@ bool LoadConfigAndExec(char[] filepath, bool bSMPath = false)
 		if (commentIndex != -1)
 		{
 			line[commentIndex] = '\0';
-			LogMessage(line);
 			TrimString(line);
-			LogMessage(line);
 		}
 
 		// Skip lines that are empty after removing comments
 		if (line[0] == '\0')
 		{
-			LogMessage("Empty line, skip");
 			continue;
 		}
 
 		// Execute the command
 		ServerCommand("%s", line);
-		LogMessage("Executed line: %s", line);
 	}
 
 	CloseHandle(hFile);
@@ -357,9 +351,7 @@ void ConfigOnModulesLoaded()
 		{
 			Format(mapconfig, sizeof(mapconfig), "configs/zr/maps/%s.post.cfg", mapname);
 			BuildPath(Path_SM, path, PLATFORM_MAX_PATH, mapconfig);
-			LogMessage(path);
 			Format(path, sizeof(path), "addons/sourcemod/%s", mapconfig);
-			LogMessage(path);
 		}
 		else
 		{
