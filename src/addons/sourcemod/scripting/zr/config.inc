@@ -251,7 +251,7 @@ void ConfigLoad()
 	}
 
 	// Execute config file - Log action if successful.
-	if (LoadConfigAndExec(path, bSMPath))
+	if (LoadConfigAndExect(path, bSMPath))
 		LogEvent(false, LogType_Normal, LOG_CORE_EVENTS, LogModule_Config, "Map Configs", "Executed map config file: %s", path);
 }
 
@@ -260,6 +260,50 @@ void ConfigLoad()
  * Or from addons/sourcemod/configs/zr/maps
  */
 bool LoadConfigAndExec(char[] filepath, bool bSMPath = false)
+{
+	if (!bSMPath)
+	{
+		ServerCommand("exec %s", filepath);
+		return true;
+	}
+
+	char line[PLATFORM_MAX_PATH];
+	File hFile = OpenFile(filepath, "r");
+
+	// Check if the file was opened successfully
+	if (hFile == null)
+		return false;
+
+	// Read each line and execute it
+	while (ReadFileLine(hFile, line, sizeof(line)) && !IsEndOfFile(hFile))
+	{
+		// If line is empty go to next line.
+		if (!line[0])
+			continue;
+
+		// Remove any newline or whitespace characters
+		TrimString(line);
+
+		// Cut out comments at the end of a line.
+		if (StrContains(line, "//") > -1)
+			SplitString(line, "//", line, sizeof(line));
+		
+		// Trim off whitespace.
+		TrimString(line);
+		
+		// If line is empty, then stop.
+		if (!line[0])
+			continue;
+
+		// Execute the command
+		ServerCommand("%s", line);
+	}
+
+	CloseHandle(hFile);
+	return true;
+}
+
+bool LoadConfigAndExect(char[] filepath, bool bSMPath = false)
 {
 	if (!bSMPath)
 	{
