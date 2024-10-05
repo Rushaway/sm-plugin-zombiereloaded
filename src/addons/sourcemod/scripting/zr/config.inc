@@ -275,7 +275,7 @@ bool LoadConfigAndExec(char[] filepath, bool bSMPath = false)
 		return false;
 
 	// Read each line and execute it
-	while (ReadFileLine(hFile, line, sizeof(line)) && !IsFileEOF(hFile))
+	while (ReadFileLine(hFile, line, sizeof(line)) && !IsEndOfFile(hFile))
 	{
 		// If line is empty go to next line.
 		if (!line[0])
