@@ -292,7 +292,7 @@ void RoundEndOnRoundEnd(int reason)
 
 void RoundEndDisplayStats()
 {
-    AuthIdType authType = view_as<AuthIdType>(g_hCvarsList.CVAR_ROUNDEND_AUTHID_TYPE.IntValue);
+    AuthIdType authType = view_as<AuthIdType>(GetConVarInt(g_hCvarsList.CVAR_ROUNDEND_AUTHID_TYPE));
 
     for(int player = 1; player <= MaxClients; player++)
     {
