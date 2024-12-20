@@ -106,6 +106,13 @@ stock void TranslationPluginFormatString(char[] text, int maxlen, bool color = t
 
         return;
     }
+    else
+    {
+        // No color formatting, remove color tokens.
+        ReplaceString(text, maxlen, "@default", "");
+        ReplaceString(text, maxlen, "@lgreen", "");
+        ReplaceString(text, maxlen, "@green", "");
+    }
 
     // Format prefix onto the string.
     Format(text, maxlen, "%s %s", TRANSLATION_PHRASE_PREFIX, text);
