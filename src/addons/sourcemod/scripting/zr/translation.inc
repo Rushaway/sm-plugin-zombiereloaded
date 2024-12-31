@@ -85,43 +85,30 @@ stock void TranslationTranslatePhrase(int client, char[] translation, int maxlen
  */
 stock void TranslationPluginFormatString(char[] text, int maxlen, bool color = true)
 {
-    LogMessage("1. color: %d | text: %s", color, text);
     if (color)
     {
-        LogMessage("1. color: %d | text: %s", color, text);
         // Format prefix onto the string.
         Format(text, maxlen, "@green%s @default%s", TRANSLATION_PHRASE_PREFIX, text);
-        LogMessage("2. color: %d | text: %s", color, text);
 
         // Replace color tokens with game color chars.
-    #if defined _multicolors_included
-        ReplaceString(text, maxlen, "@default", "{default}");
-        ReplaceString(text, maxlen, "@lgreen", "{lightgreen}");
-        ReplaceString(text, maxlen, "@green", "{green}");
+    // #if defined _multicolors_included
+    //     ReplaceString(text, maxlen, "@default", "{default}");
+    //     ReplaceString(text, maxlen, "@lgreen", "{lightgreen}");
+    //     ReplaceString(text, maxlen, "@green", "{green}");
 
-        CFormatColor(text, maxlen, 0);
-        CAddWhiteSpace(text, maxlen);
-    #else
+    //     CFormatColor(text, maxlen, 0);
+    //     CAddWhiteSpace(text, maxlen);
+    // #else
         ReplaceString(text, maxlen, "@default", TRANSLATION_TEXT_COLOR_DEFAULT);
         ReplaceString(text, maxlen, "@lgreen", TRANSLATION_TEXT_COLOR_LGREEN);
         ReplaceString(text, maxlen, "@green", TRANSLATION_TEXT_COLOR_GREEN);
-    #endif
+    // #endif
 
-        LogMessage("3. color: %d | text: %s", color, text);
         return;
-    }
-    else
-    {
-        // No color formatting, remove color tokens.
-        ReplaceString(text, maxlen, "@default", "");
-        ReplaceString(text, maxlen, "@lgreen", "");
-        ReplaceString(text, maxlen, "@green", "");
-        LogMessage("4. color: %d | text: %s", color, text);
     }
 
     // Format prefix onto the string.
     Format(text, maxlen, "%s %s", TRANSLATION_PHRASE_PREFIX, text);
-    LogMessage("5. color: %d | text: %s", color, text);
 }
 
 /**
