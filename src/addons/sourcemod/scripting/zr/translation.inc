@@ -96,8 +96,8 @@ stock void TranslationPluginFormatString(char[] text, int maxlen, bool color = t
         ReplaceString(text, maxlen, "@lgreen", "{lightgreen}");
         ReplaceString(text, maxlen, "@green", "{green}");
 
-        // CFormatColor(text, maxlen, 0);
-        // CAddWhiteSpace(text, maxlen);
+        CFormatColor(text, maxlen, 0);
+        CAddWhiteSpace(text, maxlen);
     #else
         ReplaceString(text, maxlen, "@default", TRANSLATION_TEXT_COLOR_DEFAULT);
         ReplaceString(text, maxlen, "@lgreen", TRANSLATION_TEXT_COLOR_LGREEN);
@@ -449,11 +449,13 @@ stock void TranslationReplyToCommand(int client, any ...)
     {
         // Format string to create plugin style. (color)
         TranslationPluginFormatString(translation, sizeof(translation));
+        PrintToChatAll("Client %N is valid", client);
     }
     else
     {
         // Format string to create plugin style. (no color)
         TranslationPluginFormatString(translation, sizeof(translation), false);
+        PrintToChatAll("Client %N is invalid", client);
     }
 
     // Print translated phrase to server or client's chat/console.
