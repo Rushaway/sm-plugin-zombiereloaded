@@ -85,6 +85,7 @@ stock void TranslationTranslatePhrase(int client, char[] translation, int maxlen
  */
 stock void TranslationPluginFormatString(char[] text, int maxlen, bool color = true)
 {
+    LogMessage(text);
     if (color)
     {
         // Format prefix onto the string.
@@ -116,6 +117,7 @@ stock void TranslationPluginFormatString(char[] text, int maxlen, bool color = t
 
     // Format prefix onto the string.
     Format(text, maxlen, "%s %s", TRANSLATION_PHRASE_PREFIX, text);
+    LogMessage(text);
 }
 
 /**
