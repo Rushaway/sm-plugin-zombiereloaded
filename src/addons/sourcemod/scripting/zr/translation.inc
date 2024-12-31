@@ -91,18 +91,18 @@ stock void TranslationPluginFormatString(char[] text, int maxlen, bool color = t
         Format(text, maxlen, "@green%s @default%s", TRANSLATION_PHRASE_PREFIX, text);
 
         // Replace color tokens with game color chars.
-    // #if defined _multicolors_included
-    //     ReplaceString(text, maxlen, "@default", "{default}");
-    //     ReplaceString(text, maxlen, "@lgreen", "{lightgreen}");
-    //     ReplaceString(text, maxlen, "@green", "{green}");
+    #if defined _multicolors_included
+        ReplaceString(text, maxlen, "@default", "{default}");
+        ReplaceString(text, maxlen, "@lgreen", "{lightgreen}");
+        ReplaceString(text, maxlen, "@green", "{green}");
 
-    //     CFormatColor(text, maxlen, 0);
-    //     CAddWhiteSpace(text, maxlen);
-    // #else
+        // CFormatColor(text, maxlen, 0);
+        // CAddWhiteSpace(text, maxlen);
+    #else
         ReplaceString(text, maxlen, "@default", TRANSLATION_TEXT_COLOR_DEFAULT);
         ReplaceString(text, maxlen, "@lgreen", TRANSLATION_TEXT_COLOR_LGREEN);
         ReplaceString(text, maxlen, "@green", TRANSLATION_TEXT_COLOR_GREEN);
-    // #endif
+    #endif
 
         return;
     }
