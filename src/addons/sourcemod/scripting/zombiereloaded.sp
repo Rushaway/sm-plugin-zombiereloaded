@@ -32,7 +32,6 @@
 #include <sdktools>
 #include <clientprefs>
 #include <cstrike>
-#tryinclude <multicolors>
 #define INCLUDED_BY_ZOMBIERELOADED
 #include <zombiereloaded>
 #undef INCLUDED_BY_ZOMBIERELOADED
